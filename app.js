@@ -13,7 +13,7 @@ for (let  i = 0; i < SQUARES_NUMBER; i++) {
         removeColor(square))
 
     board.append(square)
-}
+} 
 
 function setColor(element) {
     const color = getRandomColor()
