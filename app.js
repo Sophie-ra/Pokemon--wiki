@@ -29,6 +29,7 @@ function removeColor(element) {
 }
 
 
+
 function getRandomColor() {
     const index = Math.floor(Math.random()* colors.
     length)
