@@ -27,6 +27,7 @@ function removeColor(element) {
     element.style.boxShadow = `0 0 2px #000`
 }
 
+
 function getRandomColor() {
     const index = Math.floor(Math.random()* colors.
     length)
