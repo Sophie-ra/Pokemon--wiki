@@ -1,69 +1,52 @@
-import React, {useState} from 'react';
-const api = {
-  key: "c27ff350d97879d2629bb915a54a221f",
-  base: "https://api.openweathermap.org/data/2.5/"
-}
+импортировать  React ,  {  useEffect ,  useState  }  из  'реагировать'
+импортировать  PokemonThumb  из  './components/PokemonThumb'
+импортировать  PokemonDetails  из  './components/PokemonDetails'
 
-function App() {
-  const [query, setQuery] = useState('');
-  const [weather, setWeather] = useState({});
+константное  приложение  =  ( )  =>  {
 
-  const search = evt => {
-    if (evt.key === "Enter") {
-      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
-          .then(res => res.json())
-          .then(result => {
-              setWeather(result);
-            setQuery('');
-            console.log(result)
+   const [ allPokemons ,  setAllPokemons ]  =  useState ( [ ] )
+   const  [ loadMore ,  setLoadMore ]  =  useState ( 'https://pokeapi.co/api/v2/pokemon?limit=20' )
 
-          });
+  const  getAllPokemons  =  асинхронный  ( )  =>  {
+    const  res  =  ожидание выборки ( loadMore  )
+    константные  данные  =  ожидание  res . джсон ( )
+
+    setLoadMore ( данные . следующий )
+
+    функция  createPokemonObject ( результаты )   {
+      результаты . forEach (  асинхронный  покемон  =>  {
+        const  res  =  await  fetch ( ` https://pokeapi.co/api/v2/pokemon/$ { pokemon.name } ` ) _
+        константные  данные  =   ожидание  res . джсон ( )
+        setAllPokemons ( текущий  список  =>  [ ... текущий список ,  данные ] )
+        жду  всех покемонов . sort ( ( a ,  b )  =>  a . id  -  b . id )
+      } )
     }
+    createPokemonObject ( данные . результаты )
   }
 
-  const dateBuilder = (d) =>{
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
-    let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    let day = days[d.getDay()];
-    let date = d.getDate();
-    let month = months[d.getMonth()];
-    let year = d.getFullYear();
+ использоватьЭффект ( ( )  =>  {
+  получить все покемоны ( )
+ } ,  [ ] )
 
-    return `${day} ${date} ${month} ${year}`
-  }
-  return (
-    <div className={
-      (typeof weather.main != "undefined") ? ((weather.main.temp > 16) ? 'app warm' : 'app') : 'app'}>
-      <main>
-        <div className="search-box">
-          <input
-          type="text"
-          className="search-bar"
-          placeholder="Search..."
-          onChange={e => setQuery(e.target.value)}
-          value={query}
-          onKeyPress={search}
-          />
-        </div>
-          {(typeof weather.main != "undefined") ? (
-        <div>
-            <div className="location-box">
-              <div className="location">{weather.name}, {weather.sys.country} </div>
-              <div className="date"> {dateBuilder( new Date())} </div>
-            </div>
-            <div className="weather-box">
-                <div className="temp">
-                  {Math.round(weather.main.temp)}℃
-                </div>
-              <div className="weather"> {weather.weather[0].main}</div>
-            </div>
-        </div>
-              ) : ('')}
-      </main>
-
-    </div>
-  );
+  вернуться  (
+    < div  className = "контейнер приложения" >
+      < h1 > Эволюция покемонов < / h1 >
+      < div  className = "контейнер покемонов" >
+        < div  className = "все контейнеры" >
+          { все покемоны . карта (  ( pokemonStats ,  индекс )  => 
+            < ПокемонБалец
+              ключ = { индекс }
+              id = { pokemonStats . идентификатор }
+              изображение = { pokemonStats . спрайты . другой . мир_мечты . фронт_по умолчанию }
+              имя = { pokemonStats . имя }
+              тип = { pokemonStats . типы [ 0 ] . тип . имя }
+            / > ) }
+          
+        < / раздел >
+          < button  className = "load-more"  onClick = { ( )  =>  getAllPokemons ( ) } > Загрузить больше < / button >
+      < / раздел >
+    < / раздел >
+  ) ;
 }
 
-export default App;
-
+экспортировать  приложение по умолчанию  ;
